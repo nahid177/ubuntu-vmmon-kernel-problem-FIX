@@ -1,0 +1,23 @@
+STEP BY STEP FIX:
+
+
+1. OPEN TERMINAL (CTRL + T) AND ENTER ROOT
+
+2.  sudo vmware-modconfig --console --install-all
+  //You'll see that there are issues, THAT IS OK!
+
+3.  openssl req -new -x509 -newkey rsa:2048 -keyout VMWARE17.priv -outform DER -out VMWARE17.der -nodes -days 36500 -subj "/CN=VMWARE/"
+
+4.  sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 ./VMWARE17.priv ./VMWARE17.der $(modinfo -n vmmon)
+
+5.  sudo /usr/src/linux-headers-$(uname -r)/scripts/sign-file sha256 ./VMWARE17.priv ./VMWARE17.der $(modinfo -n vmnet)
+
+6.  tail $(modinfo -n vmmon) | grep "Module signature appended"
+
+7.  sudo mokutil --import VMWARE17.der
+  //This will ask you for a password, enter some new password a bit long like 1717vmware.    Reenter same password.
+
+8.  Reboot your PC. You will be prompted a blue screen background.
+Select ENROLL MOK
+Enter the password you created earlier then
+Reboot or Continue boot
